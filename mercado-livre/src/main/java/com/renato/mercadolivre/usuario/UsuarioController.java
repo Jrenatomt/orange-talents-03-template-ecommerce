@@ -30,7 +30,5 @@ public class UsuarioController {
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 				.buildAndExpand(novoUsuario.getId()).toUri();
 		return ResponseEntity.created(uri).body(new UsuarioResponse(novoUsuario));
-
 	}
-
 }

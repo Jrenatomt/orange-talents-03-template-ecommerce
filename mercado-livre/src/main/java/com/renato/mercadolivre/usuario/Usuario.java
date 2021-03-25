@@ -14,8 +14,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Size;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
 import com.sun.istack.NotNull;
 
 @Entity
@@ -43,7 +41,7 @@ public class Usuario {
 	public Usuario(@Email @NotBlank String login, @NotBlank @Size(min = 6) String senha) {
 		super();
 		this.login = login;
-		this.senha = new BCryptPasswordEncoder().encode(senha);
+		this.senha = senha;
 	}
 	
 	public Long getId() {

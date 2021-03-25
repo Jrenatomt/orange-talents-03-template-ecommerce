@@ -4,6 +4,8 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import com.sun.istack.NotNull;
 
 public class UsuarioRequest {
@@ -27,6 +29,7 @@ public class UsuarioRequest {
 	}
 
 	public Usuario toModel() {
-		return new Usuario(login, senha);
+		// a senha sera encodada nesse momento
+		return new Usuario(login, new BCryptPasswordEncoder().encode(senha));
 	}
 }

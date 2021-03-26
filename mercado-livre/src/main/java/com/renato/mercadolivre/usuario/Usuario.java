@@ -25,8 +25,8 @@ public class Usuario {
 	private Long id;
 	@Email
 	@Column(unique = true, nullable = false)
-	@NotBlank @NotNull
-	private String login;
+	@NotBlank 
+	private String email;
 	@Column( nullable = false)
 	@NotBlank @NotNull @Size(min = 6)
 	private String senha;
@@ -38,9 +38,9 @@ public class Usuario {
 	public Usuario() {
 	}
 	
-	public Usuario(@Email @NotBlank String login, @NotBlank @Size(min = 6) String senha) {
+	public Usuario(@Email @NotBlank String email, @NotBlank @Size(min = 6) String senha) {
 		super();
-		this.login = login;
+		this.email = email;
 		this.senha = senha;
 	}
 	
@@ -48,10 +48,10 @@ public class Usuario {
 		return id;
 	}
 
-	public String getLogin() {
-		return login;
+	public String getEmail() {
+		return email;
 	}
-
+	
 	@PrePersist
 	public void prePersist() {
 		dataCadastro = LocalDateTime.now();

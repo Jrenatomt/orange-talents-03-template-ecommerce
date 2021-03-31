@@ -4,6 +4,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.renato.mercadolivre.validation.UniqueValue;
@@ -33,5 +34,14 @@ public class UsuarioRequest {
 	public Usuario toModel() {
 		// a senha sera encodada nesse momento
 		return new Usuario(email, new BCryptPasswordEncoder().encode(senha));
+	}
+	
+	public static Usuario authenticated() {
+		try {
+			return (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		}
+		catch (Exception e) {
+			return null;
+		}
 	}
 }

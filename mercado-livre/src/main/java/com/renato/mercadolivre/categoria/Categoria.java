@@ -34,6 +34,10 @@ public class Categoria {
 	public Long getId() {
 		return id;
 	}
+	
+	public String getNome() {
+		return nome;
+	}
 
 	public void setCategoriaMae(Categoria categoriaMae) {
 		this.categoriaMae = categoriaMae;

@@ -1,5 +1,6 @@
 package com.renato.mercadolivre.categoria;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +19,7 @@ public class CategoriaController {
 	}
 
 	@PostMapping
+	@Transactional
 	public Long cadastrar(@RequestBody @Valid CategoriaRequest request) {
 		Categoria novaCategoria = request.toModel(repository);
 		repository.save(novaCategoria);

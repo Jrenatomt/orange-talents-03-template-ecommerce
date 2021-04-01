@@ -31,43 +31,49 @@ import com.renato.mercadolivre.usuario.Usuario;
 @Entity
 @Table(name = "tb_produto")
 public class Produto {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	@NotBlank
 	private String nome;
-	@NotNull @Positive
+	@NotNull
+	@Positive
 	private BigDecimal preco;
-	@NotNull @Positive
+	@NotNull
+	@Positive
 	private Integer quantidade;
-	@NotBlank @Length(max = 1000)
+	@NotBlank
+	@Length(max = 1000)
 	private String descricao;
-	@NotNull @ManyToOne @Valid
+	@NotNull
+	@ManyToOne
+	@Valid
 	private Categoria categoria;
-	@NotNull @ManyToOne
+	@NotNull
+	@ManyToOne
 	private Usuario usuario;
 	@PastOrPresent
 	private LocalDateTime dataCadastro = LocalDateTime.now();
 	@OneToMany(mappedBy = "produto", cascade = CascadeType.PERSIST)
 	private Set<CaracteristicaProduto> caracteristicas = new HashSet<>();
-	
+	@OneToMany(mappedBy = "produto", cascade = CascadeType.MERGE)
+	private Set<ImagemProduto> imagens = new HashSet<>();
+
 	@Deprecated
 	public Produto() {
 	}
-	
-	public Produto(@NotBlank String nome, @NotNull @Positive BigDecimal preco,
-			@NotNull @Positive Integer quantidade, @NotBlank @Length(max = 1000) String descricao,
-			@NotNull @Valid Categoria categoria, @NotNull Usuario usuario, 
-			@Size(min = 3) @Valid Collection<CaracteristicaRequest> caracteristicas) {
+
+	public Produto(@NotBlank String nome, @NotNull @Positive BigDecimal preco, @NotNull @Positive Integer quantidade,
+			@NotBlank @Length(max = 1000) String descricao, @NotNull @Valid Categoria categoria,
+			@NotNull Usuario usuario, @Size(min = 3) @Valid Collection<CaracteristicaRequest> caracteristicas) {
 		this.nome = nome;
 		this.preco = preco;
 		this.quantidade = quantidade;
 		this.descricao = descricao;
 		this.categoria = categoria;
 		this.usuario = usuario;
-		this.caracteristicas.addAll(caracteristicas.stream()
-				.map(caracteristica -> caracteristica.toModel(this))
+		this.caracteristicas.addAll(caracteristicas.stream().map(caracteristica -> caracteristica.toModel(this))
 				.collect(Collectors.toSet()));
 		Assert.isTrue(this.caracteristicas.size() >= 3,
 				"Produto precisa ter no mínimo 3 ou mais características únicas");
@@ -108,8 +114,8 @@ public class Produto {
 	@Override
 	public String toString() {
 		return "Produto [id=" + id + ", nome=" + nome + ", preco=" + preco + ", quantidade=" + quantidade
-				+ ", descricao=" + descricao + ", categoria=" + categoria.getNome() + ", usuario=" + usuario.getEmail() + ", dataCadastro="
-				+ dataCadastro + ", caracteristicas=" + caracteristicas + "]";
+				+ ", descricao=" + descricao + ", categoria=" + categoria + ", usuario=" + usuario.getEmail() + ", dataCadastro="
+				+ dataCadastro + ", caracteristicas=" + caracteristicas + ", imagens=" + imagens + "]";
 	}
 
 	@Override
@@ -135,5 +141,15 @@ public class Produto {
 		} else if (!nome.equals(other.nome))
 			return false;
 		return true;
+	}
+
+	public void associaImagens(Set<String> links) {
+		Set<ImagemProduto> imagens = links.stream().map(link -> new ImagemProduto(this, link))
+				.collect(Collectors.toSet());
+		this.imagens.addAll(imagens);
+	}
+
+	public boolean pertenceAoUsuario(Usuario possivelDono) {
+		return this.usuario.equals(possivelDono);
 	}
 }

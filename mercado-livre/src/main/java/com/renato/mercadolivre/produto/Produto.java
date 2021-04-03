@@ -5,15 +5,18 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
@@ -26,6 +29,8 @@ import org.hibernate.validator.constraints.Length;
 import org.springframework.util.Assert;
 
 import com.renato.mercadolivre.categoria.Categoria;
+import com.renato.mercadolivre.opniao.Opiniao;
+import com.renato.mercadolivre.pergunta.Pergunta;
 import com.renato.mercadolivre.usuario.Usuario;
 
 @Entity
@@ -37,28 +42,28 @@ public class Produto {
 	private Long id;
 	@NotBlank
 	private String nome;
-	@NotNull
-	@Positive
+	@NotNull @Positive
 	private BigDecimal preco;
-	@NotNull
-	@Positive
+	@NotNull @Positive
 	private Integer quantidade;
-	@NotBlank
-	@Length(max = 1000)
+	@NotBlank @Length(max = 1000)
 	private String descricao;
-	@NotNull
-	@ManyToOne
-	@Valid
+	@NotNull @ManyToOne @Valid
 	private Categoria categoria;
 	@NotNull
 	@ManyToOne
 	private Usuario usuario;
 	@PastOrPresent
 	private LocalDateTime dataCadastro = LocalDateTime.now();
-	@OneToMany(mappedBy = "produto", cascade = CascadeType.PERSIST)
+	@OneToMany(mappedBy = "produto", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
 	private Set<CaracteristicaProduto> caracteristicas = new HashSet<>();
-	@OneToMany(mappedBy = "produto", cascade = CascadeType.MERGE)
+	@OneToMany(mappedBy = "produto", cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
 	private Set<ImagemProduto> imagens = new HashSet<>();
+	@OrderBy("titulo asc")
+	@OneToMany(mappedBy = "produto", fetch = FetchType.EAGER)
+	private Set<Pergunta> perguntas = new HashSet<>();
+	@OneToMany(mappedBy = "produto", cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+	private Set<Opiniao> opinioes = new HashSet<>();
 
 	@Deprecated
 	public Produto() {
@@ -111,6 +116,18 @@ public class Produto {
 		return dataCadastro;
 	}
 
+	public Set<CaracteristicaProduto> getCaracteristicas() {
+		return caracteristicas;
+	}
+
+	public Set<ImagemProduto> getImagens() {
+		return imagens;
+	}
+
+	public Set<Opiniao> getOpinioes() {
+		return opinioes;
+	}
+
 	@Override
 	public String toString() {
 		return "Produto [id=" + id + ", nome=" + nome + ", preco=" + preco + ", quantidade=" + quantidade
@@ -152,4 +169,15 @@ public class Produto {
 	public boolean pertenceAoUsuario(Usuario possivelDono) {
 		return this.usuario.equals(possivelDono);
 	}
+
+	public <T> Set<T> mapiarImagens(Function<ImagemProduto, T> funcaoMapeadora) {
+		return this.imagens.stream().map(funcaoMapeadora)
+				.collect(Collectors.toSet());
+	}
+
+	public <T> Set<T> mapiarPerguntas(Function<Pergunta, T> funcaoMapeadora) {
+		return this.perguntas.stream().map(funcaoMapeadora)
+				.collect(Collectors.toSet());
+	}
+
 }

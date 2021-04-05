@@ -14,7 +14,7 @@ INSERT INTO tb_categoria (nome, categoria_mae_id) Values ('Celular', 1);
 INSERT INTO tb_categoria (nome, categoria_mae_id) Values ('Motorola', 2);
 
 INSERT INTO tb_produto (DATA_CADASTRO,DESCRICAO,nome,preco,QUANTIDADE,CATEGORIA_ID,usuario_id) VALUES 
-('2021-04-02 21:43:10.011483','celular semi novo','celular motorola','200',1,3,1);
+('2021-04-02 21:43:10.011483','celular semi novo','celular motorola','200',2,3,1);
 
 INSERT INTO IMAGEM_PRODUTO (link,produto_id) Values ('http://bucket.io/renato.jpg', 1);
 INSERT INTO IMAGEM_PRODUTO (link,produto_id) Values ('http://bucket.io/ryan.jpg', 1);

@@ -42,13 +42,18 @@ public class Produto {
 	private Long id;
 	@NotBlank
 	private String nome;
-	@NotNull @Positive
+	@NotNull
+	@Positive
 	private BigDecimal preco;
-	@NotNull @Positive
-	private Integer quantidade;
-	@NotBlank @Length(max = 1000)
+	@NotNull
+	@Positive
+	private int quantidade;
+	@NotBlank
+	@Length(max = 1000)
 	private String descricao;
-	@NotNull @ManyToOne @Valid
+	@NotNull
+	@ManyToOne
+	@Valid
 	private Categoria categoria;
 	@NotNull
 	@ManyToOne
@@ -69,7 +74,7 @@ public class Produto {
 	public Produto() {
 	}
 
-	public Produto(@NotBlank String nome, @NotNull @Positive BigDecimal preco, @NotNull @Positive Integer quantidade,
+	public Produto(@NotBlank String nome, @NotNull @Positive BigDecimal preco, @NotNull @Positive int quantidade,
 			@NotBlank @Length(max = 1000) String descricao, @NotNull @Valid Categoria categoria,
 			@NotNull Usuario usuario, @Size(min = 3) @Valid Collection<CaracteristicaRequest> caracteristicas) {
 		this.nome = nome;
@@ -96,7 +101,7 @@ public class Produto {
 		return preco;
 	}
 
-	public Integer getQuantidade() {
+	public int getQuantidade() {
 		return quantidade;
 	}
 
@@ -131,8 +136,9 @@ public class Produto {
 	@Override
 	public String toString() {
 		return "Produto [id=" + id + ", nome=" + nome + ", preco=" + preco + ", quantidade=" + quantidade
-				+ ", descricao=" + descricao + ", categoria=" + categoria + ", usuario=" + usuario.getEmail() + ", dataCadastro="
-				+ dataCadastro + ", caracteristicas=" + caracteristicas + ", imagens=" + imagens + "]";
+				+ ", descricao=" + descricao + ", categoria=" + categoria + ", usuario=" + usuario.getEmail()
+				+ ", dataCadastro=" + dataCadastro + ", caracteristicas=" + caracteristicas + ", imagens=" + imagens
+				+ "]";
 	}
 
 	@Override
@@ -171,13 +177,20 @@ public class Produto {
 	}
 
 	public <T> Set<T> mapiarImagens(Function<ImagemProduto, T> funcaoMapeadora) {
-		return this.imagens.stream().map(funcaoMapeadora)
-				.collect(Collectors.toSet());
+		return this.imagens.stream().map(funcaoMapeadora).collect(Collectors.toSet());
 	}
 
 	public <T> Set<T> mapiarPerguntas(Function<Pergunta, T> funcaoMapeadora) {
-		return this.perguntas.stream().map(funcaoMapeadora)
-				.collect(Collectors.toSet());
+		return this.perguntas.stream().map(funcaoMapeadora).collect(Collectors.toSet());
 	}
 
+	public boolean abataEstoque(@Positive int quantidade) {
+		Assert.isTrue(quantidade > 0, "A quantidade deve ser maior que zero para abater o estoque " + quantidade);
+
+		if (quantidade <= this.quantidade) {
+			this.quantidade -= quantidade;
+			return true;
+		}
+		return false;
+	}
 }

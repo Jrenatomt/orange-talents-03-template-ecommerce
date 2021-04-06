@@ -23,6 +23,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Length;
@@ -42,21 +43,15 @@ public class Produto {
 	private Long id;
 	@NotBlank
 	private String nome;
-	@NotNull
-	@Positive
+	@NotNull @Positive
 	private BigDecimal preco;
-	@NotNull
-	@Positive
+	@NotNull @PositiveOrZero
 	private int quantidade;
-	@NotBlank
-	@Length(max = 1000)
+	@NotBlank @Length(max = 1000)
 	private String descricao;
-	@NotNull
-	@ManyToOne
-	@Valid
+	@NotNull @ManyToOne @Valid
 	private Categoria categoria;
-	@NotNull
-	@ManyToOne
+	@NotNull @ManyToOne
 	private Usuario usuario;
 	@PastOrPresent
 	private LocalDateTime dataCadastro = LocalDateTime.now();
@@ -74,7 +69,7 @@ public class Produto {
 	public Produto() {
 	}
 
-	public Produto(@NotBlank String nome, @NotNull @Positive BigDecimal preco, @NotNull @Positive int quantidade,
+	public Produto(@NotBlank String nome, @NotNull @Positive BigDecimal preco, @NotNull @PositiveOrZero int quantidade,
 			@NotBlank @Length(max = 1000) String descricao, @NotNull @Valid Categoria categoria,
 			@NotNull Usuario usuario, @Size(min = 3) @Valid Collection<CaracteristicaRequest> caracteristicas) {
 		this.nome = nome;

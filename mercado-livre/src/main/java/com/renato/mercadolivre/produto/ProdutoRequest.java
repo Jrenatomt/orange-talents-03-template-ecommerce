@@ -8,6 +8,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Length;
@@ -24,9 +25,8 @@ public class ProdutoRequest {
 	@NotNull
 	@Positive
 	private BigDecimal preco;
-	@NotNull
-	@Positive
-	private Integer quantidade;
+	@NotNull @PositiveOrZero
+	private int quantidade;
 	@NotBlank
 	@Length(max = 1000)
 	private String descricao;
@@ -35,12 +35,13 @@ public class ProdutoRequest {
 	private Long idCategoria;
     @Size(min = 3) @Valid
 	private List<CaracteristicaRequest> caracteristicas = new ArrayList<>();
+    
 	@Deprecated
 	public ProdutoRequest() {
 	}
 
 	public ProdutoRequest(@NotBlank String nome, @NotNull @Positive BigDecimal preco,
-			@NotNull @Positive Integer quantidade, @NotBlank @Length(max = 1000) String descricao,
+			@NotNull @PositiveOrZero int quantidade, @NotBlank @Length(max = 1000) String descricao,
 			@NotNull Long idCategoria, @Size(min = 3) @Valid List<CaracteristicaRequest> caracteristicas) {
 		this.nome = nome;
 		this.preco = preco;
@@ -58,7 +59,7 @@ public class ProdutoRequest {
 		return preco;
 	}
 
-	public Integer getQuantidade() {
+	public int getQuantidade() {
 		return quantidade;
 	}
 

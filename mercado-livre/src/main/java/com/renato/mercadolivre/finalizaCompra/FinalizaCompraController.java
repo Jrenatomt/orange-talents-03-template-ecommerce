@@ -1,7 +1,9 @@
 package com.renato.mercadolivre.finalizaCompra;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -9,10 +11,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.renato.mercadolivre.email.Emails;
 import com.renato.mercadolivre.produto.Produto;
 import com.renato.mercadolivre.produto.ProdutoRepository;
 import com.renato.mercadolivre.usuario.Usuario;
-import com.renato.mercadolivre.usuario.UsuarioRepository;
 
 @RestController
 @RequestMapping(value = "/pedidos")
@@ -20,18 +22,18 @@ public class FinalizaCompraController {
 	
 	private PedidoRepository pedidoRepository;
 	private ProdutoRepository produtoRepository;
-	private UsuarioRepository usuarioRepository;
-	
-	public FinalizaCompraController(UsuarioRepository usuarioRepository
-			, ProdutoRepository produtoRepository, 
-			PedidoRepository pedidoRepository) {
+	private Emails emails;
+
+	public FinalizaCompraController(ProdutoRepository produtoRepository, 
+			PedidoRepository pedidoRepository, Emails emails) {
 		this.pedidoRepository = pedidoRepository;
 		this.produtoRepository = produtoRepository;
-		this.usuarioRepository = usuarioRepository;
+		this.emails = emails;
 	}
 
 	@PostMapping
-	public String criaPedido(@RequestBody @Valid PedidoRequest request,
+	@Transactional
+	public String criaPedido(@RequestBody @Valid PedidoRequest request, @AuthenticationPrincipal Usuario comprador,
 			UriComponentsBuilder uriComponentsBuilder) throws BindException {
 
 		Produto produtoComprado = produtoRepository.findById(request.getIdProduto()).get();
@@ -40,11 +42,11 @@ public class FinalizaCompraController {
 		boolean abateu = produtoComprado.abataEstoque(quantidade);
 
 		if (abateu) {
-			Usuario comprador = usuarioRepository.findByEmail("visitante1@email.com");
 			GatewayPagamento gateway = request.getGateway();
 
-			Pedido novoPedido = new Pedido(produtoComprado, quantidade,comprador, gateway);
+			Pedido novoPedido = new Pedido(produtoComprado, quantidade, comprador, gateway);
 			pedidoRepository.save(novoPedido);
+			emails.novaPedido(novoPedido);
 			return novoPedido.urlRedirecionamento(uriComponentsBuilder);
 		}
 

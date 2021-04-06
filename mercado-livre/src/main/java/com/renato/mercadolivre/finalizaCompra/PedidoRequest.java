@@ -1,22 +1,24 @@
 package com.renato.mercadolivre.finalizaCompra;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 
 public class PedidoRequest {
 
-	@Positive
+	@NotNull @PositiveOrZero
 	private int quantidade;
 	@NotNull
 	private Long idProduto;
-	@NotNull
+	@NotNull @Enumerated(EnumType.STRING)
 	private GatewayPagamento gateway;
 	
 	@Deprecated
 	public PedidoRequest() {
 	}
 
-	public PedidoRequest(@Positive int quantidade, @NotNull Long idProduto, @NotNull GatewayPagamento gateway) {
+	public PedidoRequest(@NotNull @PositiveOrZero int quantidade, @NotNull Long idProduto, @NotNull GatewayPagamento gateway) {
 		this.quantidade = quantidade;
 		this.idProduto = idProduto;
 		this.gateway = gateway;

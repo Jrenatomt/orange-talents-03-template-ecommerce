@@ -42,7 +42,7 @@ public class ProdutoController {
 	public String cadastrar(@RequestBody @Valid ProdutoRequest request) {
 		Usuario usuario = autenticacaoService.authenticated();
 		Produto novoProduto = request.toModel(categoriaRepository, usuario);
-		//produtoRepository.save(novoProduto);
+		produtoRepository.save(novoProduto);
 		return novoProduto .toString();
 	}
 

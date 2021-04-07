@@ -7,4 +7,5 @@ public interface Mailer {
 
 	void send(@NotBlank String body, @NotBlank String subject,
 			@NotBlank String nameFrom, @NotBlank @Email String from, @NotBlank @Email String to);
+	
 }

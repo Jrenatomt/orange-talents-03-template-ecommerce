@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.renato.mercadolivre.email.Emails;
 import com.renato.mercadolivre.produto.Produto;
 import com.renato.mercadolivre.produto.ProdutoRepository;
 import com.renato.mercadolivre.usuario.Usuario;
@@ -22,13 +21,11 @@ public class FinalizaCompraController {
 	
 	private PedidoRepository pedidoRepository;
 	private ProdutoRepository produtoRepository;
-	private Emails emails;
 
 	public FinalizaCompraController(ProdutoRepository produtoRepository, 
-			PedidoRepository pedidoRepository, Emails emails) {
+			PedidoRepository pedidoRepository) {
 		this.pedidoRepository = pedidoRepository;
 		this.produtoRepository = produtoRepository;
-		this.emails = emails;
 	}
 
 	@PostMapping
@@ -46,7 +43,6 @@ public class FinalizaCompraController {
 
 			Pedido novoPedido = new Pedido(produtoComprado, quantidade, comprador, gateway);
 			pedidoRepository.save(novoPedido);
-			emails.novaPedido(novoPedido);
 			return novoPedido.urlRedirecionamento(uriComponentsBuilder);
 		}
 

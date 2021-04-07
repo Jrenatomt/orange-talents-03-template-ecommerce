@@ -42,8 +42,8 @@ public class ProdutoController {
 	public String cadastrar(@RequestBody @Valid ProdutoRequest request) {
 		Usuario usuario = autenticacaoService.authenticated();
 		Produto novoProduto = request.toModel(categoriaRepository, usuario);
-		produtoRepository.save(novoProduto);
-		return novoProduto.toString();
+		//produtoRepository.save(novoProduto);
+		return novoProduto .toString();
 	}
 
 	@PostMapping(value = "/{id}/imagens")
@@ -63,6 +63,5 @@ public class ProdutoController {
 		produtoRepository.save(produto);
 
 		return produto.toString();
-
 	}
 }

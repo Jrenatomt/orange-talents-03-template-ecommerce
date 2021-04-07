@@ -55,10 +55,12 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
 		if (Arrays.asList(env.getActiveProfiles()).contains("test")) {
 			http.headers().frameOptions().disable();
 		}
-
+		
 		http.authorizeRequests()
-		        .antMatchers(HttpMethod.GET, "/produtos/**").permitAll()
+		        .antMatchers(HttpMethod.POST, "/ranking").permitAll()
+		        .antMatchers(HttpMethod.POST, "/notas-fiscais").permitAll()
 				.antMatchers(HttpMethod.POST, "/auth").permitAll()
+				.antMatchers(HttpMethod.POST, "/usuarios").permitAll()
 				.antMatchers("/h2-console/**").permitAll()
 				.anyRequest().authenticated()
 				.and().csrf().disable()

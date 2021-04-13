@@ -3,6 +3,7 @@ package com.renato.mercadolivre.pergunta;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,7 +36,7 @@ public class PerguntaController {
 
 	@PostMapping(value = "/{idProduto}/perguntas")
 	@Transactional
-	public String criaPergunta(@PathVariable("idProduto") Long idProduto
+	public ResponseEntity<?> criaPergunta(@PathVariable("idProduto") Long idProduto
 			, @RequestBody @Valid PerguntaRequest request) {
 		
 		Usuario usuarioInteressado = autenticacaoService.authenticated();
@@ -44,6 +45,6 @@ public class PerguntaController {
 		Pergunta novaPergunta = request.toModel(usuarioInteressado, produto);
 		perguntaRepository.save(novaPergunta);
 		emails.novaPergunta(novaPergunta);
-		return novaPergunta.toString();
+		return ResponseEntity.ok().build();
 	}
 }

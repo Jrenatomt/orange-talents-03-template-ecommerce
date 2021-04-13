@@ -6,6 +6,7 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -39,16 +40,16 @@ public class ProdutoController {
 
 	@PostMapping
 	@Transactional
-	public String cadastrar(@RequestBody @Valid ProdutoRequest request) {
+	public ResponseEntity<?> cadastrar(@RequestBody @Valid ProdutoRequest request) {
 		Usuario usuario = autenticacaoService.authenticated();
 		Produto novoProduto = request.toModel(categoriaRepository, usuario);
 		produtoRepository.save(novoProduto);
-		return novoProduto .toString();
-	}
+		return ResponseEntity.ok().build();
+	} 
 
 	@PostMapping(value = "/{id}/imagens")
 	@Transactional
-	public String criaImagem(@PathVariable("id") Long id, @Valid ImagemRequest request) {
+	public ResponseEntity<?> criaImagem(@PathVariable("id") Long id, @Valid ImagemRequest request) {
 
 		Usuario dono = autenticacaoService.authenticated();
 		Produto produto = produtoRepository.findById(id).get();
@@ -61,7 +62,7 @@ public class ProdutoController {
 		produto.associaImagens(links);
 
 		produtoRepository.save(produto);
-
-		return produto.toString();
+		
+		return ResponseEntity.ok().build();
 	}
 }

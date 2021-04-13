@@ -3,6 +3,7 @@ package com.renato.mercadolivre.opniao;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,12 +35,12 @@ public class OpiniaoController {
 
 	@PostMapping(value = "/{idProduto}/opiniao")
 	@Transactional
-	public String criaOpiniao(@PathVariable("idProduto") Long idProduto, @RequestBody @Valid OpiniaoRequest request) {
+	public ResponseEntity<?> criaOpiniao(@PathVariable("idProduto") Long idProduto, @RequestBody @Valid OpiniaoRequest request) {
 		Usuario usuario = autenticacaoService.authenticated();
 		Produto produto = produtoRepository.findById(idProduto).get();
 		
 		Opiniao novaOpiniao = request.toModel(usuario,produto);
 		opiniaoRepository.save(novaOpiniao);
-		return novaOpiniao.toString();
+		return ResponseEntity.ok().build();
 	}
 }

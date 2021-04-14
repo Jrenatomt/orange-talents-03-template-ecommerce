@@ -29,7 +29,7 @@ public class DetelheProdutoResponse {
 		this.linkImagens = produto.mapiarImagens(imagem -> imagem.getLink());
 		this.perguntas = produto.mapiarPerguntas(pergunta -> pergunta.getTitulo());
 		Integer total = produto.getOpinioes().stream().map(opiniao -> opiniao.getNota()).reduce(0, Integer::sum);
-		this.mediaNotas = (double) (total / produto.getOpinioes().size());
+		this.mediaNotas = (total == 0) ? 0 : (double) (total / produto.getOpinioes().size());
 		this.totalNotasDadas = produto.getOpinioes().size();
 		this.opinioes = produto.getOpinioes().stream().map(OpiniaoResponse::new).collect(Collectors.toSet());
 	}

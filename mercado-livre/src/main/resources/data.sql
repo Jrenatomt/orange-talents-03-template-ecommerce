@@ -22,7 +22,10 @@ INSERT INTO IMAGEM_PRODUTO (link,produto_id) Values ('http://bucket.io/ryan.jpg'
 INSERT INTO PERGUNTA (instante,titulo,produto_id,USUARIO_INTERESSADO_ID) Values 
 ('2021-04-02','o celular está funcionando bem?',1,2);
 
-
+INSERT INTO OPINIAO (DESCRICAO,NOTA,TITULO,PRODUTO_ID,USUARIO_ID) values 
+('O celular é top',5,'celular',1,2);
+INSERT INTO OPINIAO (DESCRICAO,NOTA,TITULO,PRODUTO_ID,USUARIO_ID) values 
+('O celular parece bom',3,'celular',1,3);
 
 INSERT INTO CARACTERISTICA_PRODUTO(DESCRICAO,NOME,PRODUTO_ID) values 
 ('ANDROID','celular',1);
